@@ -45,15 +45,10 @@ def start_message(filename, version, args=None):
             print("%s: %s" % (k, args[k]))
         print('--------------------------------------------------------------------------------')
 
-#input: A, B, C, D
-#output: {A,B}, {A,C}, {A,D}, {B,C}, {B,D}, {C,D}
 def create_project_tuples(g_projects):
     a = "".join(g_projects.split())
     tup = tuple(a)
-    print(tup)
-    things = itertools.combinations_with_replacement(tup, 2)
     results = [x for x in itertools.combinations(tup, 2) ]
-    print(results)
     return results
     
 def construct_kwxsync_commands(project_tuples, g_rest):
@@ -62,7 +57,6 @@ def construct_kwxsync_commands(project_tuples, g_rest):
         command = "kwxsync %s" % g_rest
         for proj in project_tup:
             command += " %s" % proj 
-        #print(command)
         commandList.append(command)
     for command in commandList:
         print(command)
@@ -75,7 +69,6 @@ def main():
     g_rest = args.command
     g_projects = args.projects
     start_message(os.path.basename(__file__), g_version, {'projects': g_projects, 'rest': g_rest})
-    error = False
     project_tuples = create_project_tuples(g_projects)
     construct_kwxsync_commands(project_tuples, g_rest)
 
