@@ -27,16 +27,13 @@ else:
     import ssl
 
 g_version = 1.0
-g_projects = "A B C D"
-g_rest = """--statuses "Analyze","Ignore","Not a problem","Fix","Fix in Next Release","Defer","Filter" --last-sync "05-03-2016 00:00:00" --host ***REMOVED*** --port 8080"""
+g_projects = ""
+g_rest = ""
 
-# Logging messages to the console
-def output(message, severity=''):
-    if severity is None or severity == '':
-        print('[' + str(datetime.now().strftime('%Y-%m-%d  %H:%M:%S')) + ']: ' + message)
-    else:
-        print('[' + str(datetime.now().strftime('%Y-%m-%d  %H:%M:%S')) + '] ' + severity + ': ' + message)
-
+parser = argparse.ArgumentParser(prog=os.path.basename(__file__),
+                                 description="returns several kwxsync commands for a given kwxsync command")
+parser.add_argument('-c', "--command", nargs='?', required=True, metavar="all kwxsync arguments", help="kwxsync command arguments, e.g. '""""--statuses "Analyze","Ignore","Not a problem","Fix","Fix in Next Release","Defer","Filter" --last-sync "05-03-2016 00:00:00" --host ***REMOVED*** --port 8080'""")
+parser.add_argument('-p', "--projects", nargs='?', required=True, metavar="list of projects", help="lists of projects with which to perform kwxsync across")
 
 # Message to be displayed on start
 def start_message(filename, version, args=None):
@@ -74,7 +71,9 @@ def construct_kwxsync_commands(project_tuples, g_rest):
 
 def main():
     global g_rest, g_projects
-    #set_global_data()
+    args = parser.parse_args()
+    g_rest = args.command
+    g_projects = args.projects
     start_message(os.path.basename(__file__), g_version, {'projects': g_projects, 'rest': g_rest})
     error = False
     project_tuples = create_project_tuples(g_projects)
