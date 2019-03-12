@@ -28,8 +28,8 @@ else:
 
 g_version = 1.0
 g_projects = ""
-g_rest = ""
-g_sleep = False
+g_commands = ""
+g_sleep = ""
 
 parser = argparse.ArgumentParser(prog=os.path.basename(__file__),
                                  description="returns several kwxsync commands for a given kwxsync command")
@@ -53,17 +53,13 @@ def create_project_tuples(g_projects):
     results = [x for x in itertools.combinations(tup, 2) ]
     return results
     
-def construct_kwxsync_commands(project_tuples, g_rest):
+def construct_kwxsync_commands(project_tuples, g_commands):
     commandList = []
     for project_tup in project_tuples:
-        command = "kwxsync %s" % g_rest
+        command = "kwxsync %s" % g_commands
         for proj in project_tup:
             command += " %s" % proj 
         commandList.append(command)
-    for command in commandList:
-        print(command)
-        if g_sleep:
-            print("sleep(2)")
     return commandList
 
 # Open file
@@ -80,16 +76,31 @@ def writeOutputToFile(f, commandList):
         f.write(command + "\n")
         if g_sleep:
             f.write(g_sleep+ "\n")
+
+# Message to be displayed at end of execution
+def end_message(code):
+    if code == 0:
+        print('--------------------------------------------------------------------------------')
+        print('FINISHED: SUCCESSFUL')
+        print('kwxsync commands have been saved in file: kwxsync_commands.out')
+        print('--------------------------------------------------------------------------------')
+    else:
+        print('--------------------------------------------------------------------------------')
+        print('FINISHED: FAILED')
+        print('--------------------------------------------------------------------------------')
+    sys.exit(code)
+
 def main():
-    global g_rest, g_projects, g_sleep
+    global g_commands, g_projects, g_sleep
     args = parser.parse_args()
-    g_rest = args.command
+    g_commands = args.command
     g_projects = args.projects
     g_sleep = args.sleep
-    start_message(os.path.basename(__file__), g_version, {'projects': g_projects, 'rest': g_rest})
+    start_message(os.path.basename(__file__), g_version, {'projects': g_projects, 'command': g_commands})
     project_tuples = create_project_tuples(g_projects)
-    commandList = construct_kwxsync_commands(project_tuples, g_rest)
+    commandList = construct_kwxsync_commands(project_tuples, g_commands)
     f = open_file("kwxsync_commands.out", "w+")
     writeOutputToFile(f, commandList)
+    end_message(0)
 if __name__ == '__main__':
     main()
