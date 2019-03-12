@@ -2,7 +2,7 @@ Problem Statement: Currently, providing a full kwxsync command (with all project
 Desired Solution: We want a script that takes a full kwxsync command and is capable of splitting it up into several equivalent kwxsync commands.
 
 Example input:
-kwxsync --statuses "Analyze","Ignore","Not a problem","Fix","Fix in Next Release","Defer","Filter" --last-sync "05-03-2016 00:00:00" --host ***REMOVED*** --port 8080 ***REMOVED***
+kwxsync --statuses "Analyze","Ignore","Not a problem","Fix","Fix in Next Release","Defer","Filter" --last-sync "05-03-2016 00:00:00" --host test.net --port 8080 ***REMOVED***
 
 Desired output:
 A set of calls to kwxsync, either with projects in pairs (i.e. two projects per kwxsync command) or some other number (perhaps 10?). If we had a setting where we could set the number of projects per kwxsync command that would be so lit bruv.
