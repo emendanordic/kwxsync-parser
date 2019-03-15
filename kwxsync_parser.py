@@ -48,8 +48,13 @@ def start_message(filename, version, args=None):
         print('--------------------------------------------------------------------------------')
 
 def create_project_tuples(g_projects):
-    a = "".join(g_projects.split())
+    #print(g_projects)
+    #print(g_projects.split(" "))
+    a = g_projects.split(" ")
+    #a = " ".join(g_projects.split())
+    #print(a)
     tup = tuple(a)
+    #print(tup)
     results = [x for x in itertools.combinations(tup, 2) ]
     return results
     
